@@ -1,3 +1,4 @@
+
 import bcrypt from 'bcryptjs';
 import { User, UserWithPassword } from './types';
 
@@ -9,6 +10,24 @@ let users: UserWithPassword[] = [
     email: 'admin@example.com',
     password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'admin123'
     role: 'admin',
+    isApproved: true,
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: '2',
+    username: 'john_pending',
+    email: 'john.pending@example.com',
+    password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'password123'
+    role: 'standard',
+    isApproved: false,
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: '3',
+    username: 'jane_standard',
+    email: 'jane.standard@example.com',
+    password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'password123'
+    role: 'standard',
     isApproved: true,
     createdAt: new Date().toISOString()
   }
