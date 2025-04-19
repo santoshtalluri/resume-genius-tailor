@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -56,13 +57,15 @@ const UserManagement = () => {
   const [newPassword, setNewPassword] = useState('');
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  // Fix the type here to allow both 'standard' and 'admin' roles
   const [newUserData, setNewUserData] = useState({
     username: '',
     email: '',
     password: '',
-    role: 'standard' as const,
+    role: 'standard' as 'admin' | 'standard',
   });
+
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   // Check if user is admin
   if (!user || user.role !== 'admin') {
