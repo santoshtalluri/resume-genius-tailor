@@ -1,8 +1,7 @@
-
 import { User, ResumeType, JobType, LogType } from '../types';
 
 // Base API configuration
-export const API_BASE_URL = 'http://localhost:8000/api/v1';
+export const API_BASE_URL = 'http://localhost:8000';
 
 // Request/Response Types for each endpoint
 export interface LoginRequest {
@@ -183,4 +182,3 @@ export interface PaginationParams {
  *     pass
  * ```
  */
-
