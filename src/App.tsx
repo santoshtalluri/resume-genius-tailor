@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import UserManagement from "./pages/admin/UserManagement";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import NewResume from "./pages/resumes/NewResume";
 import NewJob from "./pages/jobs/NewJob";
 import NewTailored from "./pages/tailored/NewTailored";
@@ -62,6 +63,7 @@ const App = () => (
               
               {/* Admin Routes */}
               <Route path="/admin/users" element={<UserManagement />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
               
               {/* Settings & Logs */}
               <Route path="/settings" element={<SettingsPage />} />

@@ -7,7 +7,8 @@ import {
   Settings, 
   Mail, 
   File, 
-  BarChart 
+  BarChart,
+  LayoutDashboard 
 } from 'lucide-react';
 
 export const navigationItems = [
@@ -45,6 +46,12 @@ export const navigationItems = [
     label: 'Users',
     path: '/admin/users',
     icon: Users,
+    adminOnly: true
+  },
+  {
+    label: 'App Dashboard',
+    path: '/admin/dashboard',
+    icon: LayoutDashboard,
     adminOnly: true
   },
   {

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, LayoutDashboard } from 'lucide-react';
 
 const UserNav = () => {
   const { user, logout } = useAuth();
@@ -55,6 +55,12 @@ const UserNav = () => {
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
+        {user.role === 'admin' && (
+          <DropdownMenuItem onClick={() => navigate('/admin/dashboard')}>
+            <LayoutDashboard className="mr-2 h-4 w-4" />
+            <span>App Dashboard</span>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
           <span>Settings</span>
