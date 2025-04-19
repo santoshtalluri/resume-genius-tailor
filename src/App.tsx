@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,11 @@ import NewJob from "./pages/jobs/NewJob";
 import NewTailored from "./pages/tailored/NewTailored";
 import NotFound from "./pages/NotFound";
 import ResumesPage from "./pages/resumes/ResumesPage";
+import JobsPage from "./pages/jobs/JobsPage";
+import TailoredResumesPage from "./pages/tailored/TailoredResumesPage";
+import CoverLettersPage from "./pages/coverletter/CoverLettersPage";
+import SettingsPage from "./pages/SettingsPage";
+import LogsPage from "./pages/LogsPage";
 
 // Layout
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -44,18 +50,24 @@ const App = () => (
               <Route path="/resumes/new" element={<NewResume />} />
               
               {/* Job Description Routes */}
-              <Route path="/jobs" element={<div>Job Descriptions Page</div>} />
+              <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/new" element={<NewJob />} />
               
               {/* Tailored Resume Routes */}
-              <Route path="/tailored" element={<div>Tailored Resumes Page</div>} />
+              <Route path="/tailored" element={<TailoredResumesPage />} />
               <Route path="/tailored/new" element={<NewTailored />} />
+              
+              {/* Cover Letter Routes */}
+              <Route path="/coverletters" element={<CoverLettersPage />} />
               
               {/* Admin Routes */}
               <Route path="/admin/users" element={<UserManagement />} />
               
-              {/* Settings & Profile */}
-              <Route path="/settings" element={<div>Settings Page</div>} />
+              {/* Settings & Logs */}
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/logs" element={<LogsPage />} />
+              
+              {/* User Profile */}
               <Route path="/profile" element={<div>Profile Page</div>} />
             </Route>
             

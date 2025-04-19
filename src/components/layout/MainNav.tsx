@@ -3,13 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import {
-  Home,
-  FileText,
-  Briefcase,
-  Users,
-  Settings
-} from 'lucide-react';
+import { navigationItems } from '@/lib/navigationConfig';
 
 const MainNav = () => {
   const { user } = useAuth();
@@ -17,72 +11,26 @@ const MainNav = () => {
   
   return (
     <nav className="flex items-center space-x-6">
-      <NavLink
-        to="/dashboard"
-        className={({ isActive }) =>
-          cn(
-            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground'
-          )
-        }
-      >
-        <Home className="h-4 w-4" />
-        <span>Dashboard</span>
-      </NavLink>
-      
-      <NavLink
-        to="/resumes"
-        className={({ isActive }) =>
-          cn(
-            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground'
-          )
-        }
-      >
-        <FileText className="h-4 w-4" />
-        <span>My Resumes</span>
-      </NavLink>
-      
-      <NavLink
-        to="/jobs"
-        className={({ isActive }) =>
-          cn(
-            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground'
-          )
-        }
-      >
-        <Briefcase className="h-4 w-4" />
-        <span>Jobs</span>
-      </NavLink>
-      
-      {isAdmin && (
-        <NavLink
-          to="/admin/users"
-          className={({ isActive }) =>
-            cn(
-              'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-              isActive && 'text-foreground'
-            )
-          }
-        >
-          <Users className="h-4 w-4" />
-          <span>Users</span>
-        </NavLink>
-      )}
-      
-      <NavLink
-        to="/settings"
-        className={({ isActive }) =>
-          cn(
-            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground'
-          )
-        }
-      >
-        <Settings className="h-4 w-4" />
-        <span>Settings</span>
-      </NavLink>
+      {navigationItems.map((item) => {
+        // Skip admin-only items for non-admin users
+        if (item.adminOnly && !isAdmin) return null;
+        
+        return (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              cn(
+                'flex items-center space-x-2 text-sm font-medium transition-colors hover:text-foreground',
+                isActive ? 'text-foreground' : 'text-muted-foreground'
+              )
+            }
+          >
+            {item.icon && <item.icon className="h-4 w-4" />}
+            <span>{item.label}</span>
+          </NavLink>
+        );
+      })}
     </nav>
   );
 };

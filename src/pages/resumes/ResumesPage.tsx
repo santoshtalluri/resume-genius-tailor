@@ -1,33 +1,23 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, FileText, Calendar } from 'lucide-react';
 import { formatDistance } from 'date-fns';
-
-const sampleResumes = [
-  {
-    id: '1',
-    name: 'Software Engineer Resume',
-    lastModified: '2024-03-15T10:00:00Z',
-    skills: ['React', 'TypeScript', 'Node.js']
-  },
-  {
-    id: '2',
-    name: 'Product Manager Resume',
-    lastModified: '2024-03-10T15:30:00Z',
-    skills: ['Product Strategy', 'Agile', 'User Research']
-  },
-  {
-    id: '3',
-    name: 'UX Designer Resume',
-    lastModified: '2024-03-05T09:15:00Z',
-    skills: ['Figma', 'User Testing', 'UI Design']
-  }
-];
+import { sampleResumes } from '@/lib/sampleData';
+import ResumePreviewModal from '@/components/resume/ResumePreviewModal';
+import { ResumeType } from '@/lib/types';
 
 const ResumesPage = () => {
+  const [selectedResume, setSelectedResume] = useState<ResumeType | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const handleResumeClick = (resume: ResumeType) => {
+    setSelectedResume(resume);
+    setPreviewOpen(true);
+  };
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
@@ -47,7 +37,11 @@ const ResumesPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sampleResumes.map((resume) => (
-          <Card key={resume.id} className="hover:shadow-lg transition-shadow">
+          <Card 
+            key={resume.id} 
+            className="hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => handleResumeClick(resume)}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-semibold">{resume.name}</CardTitle>
               <FileText className="h-4 w-4 text-muted-foreground" />
@@ -61,7 +55,7 @@ const ResumesPage = () => {
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {resume.skills.map((skill, index) => (
+                {resume.skills.slice(0, 5).map((skill, index) => (
                   <span
                     key={index}
                     className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs"
@@ -69,11 +63,22 @@ const ResumesPage = () => {
                     {skill}
                   </span>
                 ))}
+                {resume.skills.length > 5 && (
+                  <span className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs">
+                    +{resume.skills.length - 5} more
+                  </span>
+                )}
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      <ResumePreviewModal
+        resume={selectedResume}
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+      />
     </div>
   );
 };
