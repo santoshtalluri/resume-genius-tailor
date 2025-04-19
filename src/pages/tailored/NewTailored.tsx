@@ -47,7 +47,7 @@ const NewTailored = () => {
             stepNumber={1}
             title="Select Base Resume"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Select or upload your base resume</div>
           </WizardStep>
 
           <WizardStep
@@ -56,7 +56,7 @@ const NewTailored = () => {
             stepNumber={2}
             title="Preview Resume"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Preview your selected resume</div>
           </WizardStep>
 
           <WizardStep
@@ -65,7 +65,7 @@ const NewTailored = () => {
             stepNumber={3}
             title="Add Job Description"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Enter job description details</div>
           </WizardStep>
 
           <WizardStep
@@ -74,7 +74,7 @@ const NewTailored = () => {
             stepNumber={4}
             title="Review Requirements"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Review job requirements</div>
           </WizardStep>
 
           <WizardStep
@@ -83,7 +83,7 @@ const NewTailored = () => {
             stepNumber={5}
             title="Advanced Settings"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Configure advanced tailoring settings</div>
           </WizardStep>
 
           <WizardStep
@@ -92,7 +92,7 @@ const NewTailored = () => {
             stepNumber={6}
             title="Preview Results"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Preview tailored resume and cover letter</div>
           </WizardStep>
 
           <WizardStep
@@ -101,7 +101,7 @@ const NewTailored = () => {
             stepNumber={7}
             title="Download Documents"
           >
-            {/* Step content will be added here */}
+            <div className="text-muted-foreground">Download your tailored documents</div>
           </WizardStep>
         </div>
 
@@ -132,3 +132,4 @@ const NewTailored = () => {
 };
 
 export default NewTailored;
+
