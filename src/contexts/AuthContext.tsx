@@ -7,6 +7,7 @@ import {
   getUserById,
   getEmergencyAuthenticatedUser
 } from '@/lib/auth';
+import { useToast } from '@/components/ui/use-toast';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -29,6 +30,7 @@ const getSavedAuth = (): { user: User | null; token: string | null } => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { toast } = useToast();
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
@@ -52,7 +54,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   const login = async (email: string, password: string) => {
     try {
+      console.log("Attempting login with:", email);
       const user = await verifyCredentials(email, password);
+      console.log("Login successful:", user);
       
       // Create a simple token (would use JWT in production)
       const token = btoa(`${user.id}:${user.email}:${Date.now()}`);
@@ -67,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading: false
       });
     } catch (error) {
+      console.error("Login error:", error);
       throw error;
     }
   };
@@ -74,8 +79,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (username: string, email: string, password: string) => {
     try {
       await registerUser(username, email, password);
+      toast({
+        title: "Registration successful",
+        description: "Your account is pending approval by an administrator.",
+      });
       // Don't auto-login since admin approval is required
     } catch (error) {
+      console.error("Registration error:", error);
       throw error;
     }
   };
@@ -95,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const emergencyAuth = () => {
     try {
       const user = getEmergencyAuthenticatedUser();
+      console.log("Emergency auth successful:", user);
       
       // Create a simple token
       const token = btoa(`${user.id}:${user.email}:${Date.now()}`);

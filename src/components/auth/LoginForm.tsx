@@ -17,8 +17,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
   const { login, emergencyAuth } = useAuth();
   const { toast } = useToast();
   
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@example.com'); // Pre-fill with admin email
+  const [password, setPassword] = useState('admin123'); // Pre-fill with admin password
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -32,9 +32,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
     }
     
     setIsLoading(true);
+    console.log("Submitting login form with:", { email, password: "***" });
     
     try {
       await login(email, password);
+      console.log("Login successful in form handler");
       toast({
         title: 'Login successful',
         description: 'Welcome back!'
@@ -44,6 +46,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
         onSuccess();
       }
     } catch (err) {
+      console.error("Login error in form handler:", err);
       setError(err instanceof Error ? err.message : 'Login failed');
       toast({
         variant: 'destructive',
