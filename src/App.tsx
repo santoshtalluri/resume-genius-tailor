@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +14,7 @@ import NewResume from "./pages/resumes/NewResume";
 import NewJob from "./pages/jobs/NewJob";
 import NewTailored from "./pages/tailored/NewTailored";
 import NotFound from "./pages/NotFound";
+import ResumesPage from "./pages/resumes/ResumesPage";
 
 // Layout
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -40,7 +40,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               
               {/* Resume Routes */}
-              <Route path="/resumes" element={<div>Resumes Page</div>} />
+              <Route path="/resumes" element={<ResumesPage />} />
               <Route path="/resumes/new" element={<NewResume />} />
               
               {/* Job Description Routes */}

@@ -16,16 +16,15 @@ const MainNav = () => {
   const isAdmin = user?.role === 'admin';
   
   return (
-    <nav className="flex-1 hidden md:flex items-center gap-6 text-sm">
+    <nav className="flex items-center space-x-6">
       <NavLink
         to="/dashboard"
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground font-medium'
+            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+            isActive && 'text-foreground'
           )
         }
-        end
       >
         <Home className="h-4 w-4" />
         <span>Dashboard</span>
@@ -35,8 +34,8 @@ const MainNav = () => {
         to="/resumes"
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground font-medium'
+            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+            isActive && 'text-foreground'
           )
         }
       >
@@ -48,13 +47,13 @@ const MainNav = () => {
         to="/jobs"
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground font-medium'
+            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+            isActive && 'text-foreground'
           )
         }
       >
         <Briefcase className="h-4 w-4" />
-        <span>Job Descriptions</span>
+        <span>Jobs</span>
       </NavLink>
       
       {isAdmin && (
@@ -62,13 +61,13 @@ const MainNav = () => {
           to="/admin/users"
           className={({ isActive }) =>
             cn(
-              'flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground',
-              isActive && 'text-foreground font-medium'
+              'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+              isActive && 'text-foreground'
             )
           }
         >
           <Users className="h-4 w-4" />
-          <span>User Management</span>
+          <span>Users</span>
         </NavLink>
       )}
       
@@ -76,8 +75,8 @@ const MainNav = () => {
         to="/settings"
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground',
-            isActive && 'text-foreground font-medium'
+            'flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
+            isActive && 'text-foreground'
           )
         }
       >
