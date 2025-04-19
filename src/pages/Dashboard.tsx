@@ -3,8 +3,9 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Upload, Briefcase, Plus } from 'lucide-react';
+import { FileText, Upload, Briefcase, Plus, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from '@/components/ui/sonner';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -14,6 +15,14 @@ const Dashboard = () => {
   const resumeCount = 0;
   const jobDescriptionCount = 0;
   const tailoredResumeCount = 0;
+
+  const handleNavigateWithCheck = (path: string, requiredCount: number, requiredItem: string) => {
+    if (requiredCount === 0) {
+      toast.error(`You need to add at least one ${requiredItem} first`);
+      return;
+    }
+    navigate(path);
+  };
   
   return (
     <div className="container mx-auto">
@@ -127,13 +136,26 @@ const Dashboard = () => {
             
             <Button 
               variant="default" 
-              className="justify-start h-auto py-4"
-              onClick={() => navigate('/tailored/new')}
+              className={`justify-start h-auto py-4 ${(resumeCount === 0 || jobDescriptionCount === 0) ? 'opacity-70' : ''}`}
+              onClick={() => {
+                if (resumeCount === 0 || jobDescriptionCount === 0) {
+                  toast.error('You need both a resume and job description to create a tailored resume');
+                } else {
+                  navigate('/tailored/new');
+                }
+              }}
             >
+              {(resumeCount === 0 || jobDescriptionCount === 0) && (
+                <Lock className="absolute top-2 right-2 h-4 w-4 text-primary-foreground/70" />
+              )}
               <FileText className="mr-2 h-5 w-5" />
               <div className="text-left">
                 <div className="font-medium">Create Tailored Resume</div>
-                <div className="text-xs text-primary-foreground/70">Optimize for a specific job</div>
+                <div className="text-xs text-primary-foreground/70">
+                  {(resumeCount === 0 || jobDescriptionCount === 0) 
+                    ? "Requires resume and job description" 
+                    : "Optimize for a specific job"}
+                </div>
               </div>
             </Button>
             
