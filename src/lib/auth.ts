@@ -1,4 +1,3 @@
-
 import bcrypt from 'bcryptjs';
 import { User, UserWithPassword } from './types';
 
@@ -11,7 +10,7 @@ let users: UserWithPassword[] = [
     password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'admin123'
     role: 'admin',
     isApproved: true,
-    createdAt: new Date().toISOString()
+    created: new Date().toISOString()
   },
   {
     id: '2',
@@ -20,7 +19,7 @@ let users: UserWithPassword[] = [
     password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'password123'
     role: 'standard',
     isApproved: false,
-    createdAt: new Date().toISOString()
+    created: new Date().toISOString()
   },
   {
     id: '3',
@@ -29,7 +28,7 @@ let users: UserWithPassword[] = [
     password: '$2a$10$JmRH1z8IbQIx6YRWG1NLEOAFgj76HOh5pTLXMJqQbS4KAFneZVZH2', // 'password123'
     role: 'standard',
     isApproved: true,
-    createdAt: new Date().toISOString()
+    created: new Date().toISOString()
   }
 ];
 
@@ -73,7 +72,7 @@ export const registerUser = async (
     password: hashedPassword,
     role: 'standard',
     isApproved: false, // Requires admin approval
-    createdAt: new Date().toISOString()
+    created: new Date().toISOString()
   };
   
   users.push(newUser);
@@ -194,7 +193,7 @@ export const createUserByAdmin = async (
     password: hashedPassword,
     role,
     isApproved,
-    createdAt: new Date().toISOString()
+    created: new Date().toISOString()
   };
   
   users.push(newUser);

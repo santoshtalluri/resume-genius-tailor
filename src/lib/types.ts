@@ -1,3 +1,4 @@
+
 export type UserRole = 'admin' | 'standard';
 
 export type User = {
@@ -8,6 +9,19 @@ export type User = {
   status?: 'active' | 'pending' | 'suspended';
   created: string;
   lastLogin?: string;
+  isApproved: boolean; // Added this property
+};
+
+// Added UserWithPassword type
+export type UserWithPassword = User & {
+  password: string;
+};
+
+// Added AuthState type
+export type AuthState = {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
 };
 
 export type ResumeType = {
@@ -60,4 +74,16 @@ export type LogType = {
   message: string;
   source: string;
   details?: string;
+};
+
+// Added LLMProvider type
+export type LLMProvider = 'openai' | 'anthropic';
+
+// Added LLMConfig type
+export type LLMConfig = {
+  provider: LLMProvider;
+  model: string;
+  apiKey?: string;
+  temperature: number;
+  maxTokens: number;
 };

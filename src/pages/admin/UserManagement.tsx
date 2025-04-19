@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -57,7 +56,6 @@ const UserManagement = () => {
   const [newPassword, setNewPassword] = useState('');
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   
-  // Fix the type here to allow both 'standard' and 'admin' roles
   const [newUserData, setNewUserData] = useState({
     username: '',
     email: '',
@@ -390,7 +388,7 @@ const UserManagement = () => {
                         <TableRow key={user.id}>
                           <TableCell className="font-medium">{user.username}</TableCell>
                           <TableCell>{user.email}</TableCell>
-                          <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell>{new Date(user.created).toLocaleDateString()}</TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-2">
                               <Button
@@ -582,7 +580,7 @@ const UserManagement = () => {
                             </span>
                           )}
                         </TableCell>
-                        <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                        <TableCell>{new Date(user.created).toLocaleDateString()}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
