@@ -22,9 +22,7 @@ import TailoredResumesPage from "./pages/tailored/TailoredResumesPage";
 import CoverLettersPage from "./pages/coverletter/CoverLettersPage";
 import SettingsPage from "./pages/SettingsPage";
 import LogsPage from "./pages/LogsPage";
-
-// Layout
-import DashboardLayout from "./components/layout/DashboardLayout";
+import SidebarLayout from "./components/layout/SidebarLayout";
 
 const queryClient = new QueryClient();
 
@@ -42,8 +40,8 @@ const App = () => (
             {/* Redirect from index to dashboard when authenticated */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             
-            {/* Protected Routes */}
-            <Route element={<DashboardLayout />}>
+            {/* Protected Routes - Now wrapped in SidebarLayout */}
+            <Route element={<SidebarLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               
               {/* Resume Routes */}
