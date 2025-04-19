@@ -1,4 +1,3 @@
-
 import bcrypt from 'bcryptjs';
 import { User, UserWithPassword } from './types';
 
@@ -151,4 +150,49 @@ export const validateUserAccess = (
   
   // Standard users can only access their own data
   return requestUserId === resourceUserId;
+};
+
+// Create a new user (admin function)
+export const createUserByAdmin = async (
+  username: string,
+  email: string,
+  password: string,
+  role: 'admin' | 'standard' = 'standard',
+  isApproved: boolean = true
+): Promise<User> => {
+  // Check if user already exists
+  if (getUserByEmail(email)) {
+    throw new Error('User with this email already exists');
+  }
+
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  
+  const newUser: UserWithPassword = {
+    id: String(users.length + 1),
+    username,
+    email,
+    password: hashedPassword,
+    role,
+    isApproved,
+    createdAt: new Date().toISOString()
+  };
+  
+  users.push(newUser);
+  
+  // Return user without password
+  const { password: _, ...userWithoutPassword } = newUser;
+  return userWithoutPassword;
+};
+
+// Delete user (admin function)
+export const deleteUser = (userId: string): boolean => {
+  const userIndex = users.findIndex(user => user.id === userId);
+  
+  if (userIndex === -1) {
+    return false;
+  }
+  
+  users = users.filter(user => user.id !== userId);
+  return true;
 };

@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { getAllUsers, approveUser, rejectUser, resetUserPassword } from '@/lib/auth';
+import { getAllUsers, approveUser, rejectUser, resetUserPassword, createUserByAdmin, deleteUser } from '@/lib/auth';
 import { User } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,11 +28,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
-import { Check, X, AlertTriangle, RefreshCcw } from 'lucide-react';
+import { Check, X, AlertTriangle, RefreshCcw, UserPlus, Trash2 } from 'lucide-react';
 
 const UserManagement = () => {
   const { user } = useAuth();
@@ -46,6 +56,14 @@ const UserManagement = () => {
   const [newPassword, setNewPassword] = useState('');
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newUserData, setNewUserData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    role: 'standard' as const,
+  });
+
   // Check if user is admin
   if (!user || user.role !== 'admin') {
     return <Navigate to="/dashboard" replace />;
@@ -172,10 +190,75 @@ const UserManagement = () => {
       });
     }
   };
+
+  const handleCreateUser = async () => {
+    try {
+      const createdUser = await createUserByAdmin(
+        newUserData.username,
+        newUserData.email,
+        newUserData.password,
+        newUserData.role,
+        true
+      );
+      
+      setUsers(prev => [...prev, createdUser]);
+      setActiveUsersCount(prev => prev + 1);
+      setIsCreateDialogOpen(false);
+      setNewUserData({
+        username: '',
+        email: '',
+        password: '',
+        role: 'standard'
+      });
+      
+      toast({
+        title: 'User created',
+        description: `${createdUser.username} has been created successfully.`
+      });
+    } catch (error) {
+      console.error('Error creating user:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error creating user',
+        description: error instanceof Error ? error.message : 'An error occurred'
+      });
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, username: string) => {
+    try {
+      const result = deleteUser(userId);
+      
+      if (!result) {
+        throw new Error('User not found');
+      }
+      
+      setUsers(prevUsers => prevUsers.filter(u => u.id !== userId));
+      setActiveUsersCount(prev => prev - 1);
+      
+      toast({
+        title: 'User deleted',
+        description: `${username} has been deleted from the system.`
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error deleting user',
+        description: error instanceof Error ? error.message : 'An error occurred'
+      });
+    }
+  };
   
   return (
     <div className="container mx-auto">
-      <h2 className="text-3xl font-bold tracking-tight mb-6">User Management</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold tracking-tight">User Management</h2>
+        <Button onClick={() => setIsCreateDialogOpen(true)}>
+          <UserPlus className="h-4 w-4 mr-2" />
+          Create User
+        </Button>
+      </div>
       
       <div className="grid gap-4 md:grid-cols-3 mb-6">
         <Card>
@@ -205,6 +288,65 @@ const UserManagement = () => {
           </CardContent>
         </Card>
       </div>
+      
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New User</DialogTitle>
+            <DialogDescription>
+              Create a new user account with specified permissions.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                value={newUserData.username}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, username: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={newUserData.email}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, email: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={newUserData.password}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, password: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <select
+                id="role"
+                className="w-full rounded-md border border-input bg-background px-3 py-2"
+                value={newUserData.role}
+                onChange={(e) => setNewUserData(prev => ({ ...prev, role: e.target.value as 'admin' | 'standard' }))}
+              >
+                <option value="standard">Standard</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateUser}>
+              Create User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       <Tabs defaultValue="pending" className="w-full">
         <TabsList>
@@ -308,50 +450,82 @@ const UserManagement = () => {
                           <TableCell className="font-medium">{user.username}</TableCell>
                           <TableCell>{user.email}</TableCell>
                           <TableCell className="capitalize">{user.role}</TableCell>
+                          
+                          {/* Add delete button to active users table */}
                           <TableCell className="text-right">
-                            <Dialog open={isResetDialogOpen && selectedUserId === user.id} onOpenChange={(open) => {
-                              setIsResetDialogOpen(open);
-                              if (!open) setSelectedUserId(null);
-                            }}>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => setSelectedUserId(user.id)}
-                                >
-                                  <RefreshCcw className="h-4 w-4 mr-1" />
-                                  Reset Password
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Reset Password</DialogTitle>
-                                  <DialogDescription>
-                                    Set a new password for {user.username}
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="space-y-4 py-4">
-                                  <div className="space-y-2">
-                                    <Label htmlFor="new-password">New Password</Label>
-                                    <Input
-                                      id="new-password"
-                                      type="password"
-                                      placeholder="Enter new password"
-                                      value={newPassword}
-                                      onChange={(e) => setNewPassword(e.target.value)}
-                                    />
-                                  </div>
-                                </div>
-                                <DialogFooter>
-                                  <Button variant="outline" onClick={() => setIsResetDialogOpen(false)}>
-                                    Cancel
-                                  </Button>
-                                  <Button onClick={handleResetPassword}>
+                            <div className="flex justify-end gap-2">
+                              <Dialog open={isResetDialogOpen && selectedUserId === user.id} onOpenChange={(open) => {
+                                setIsResetDialogOpen(open);
+                                if (!open) setSelectedUserId(null);
+                              }}>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSelectedUserId(user.id)}
+                                  >
+                                    <RefreshCcw className="h-4 w-4 mr-1" />
                                     Reset Password
                                   </Button>
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>Reset Password</DialogTitle>
+                                    <DialogDescription>
+                                      Set a new password for {user.username}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                      <Label htmlFor="new-password">New Password</Label>
+                                      <Input
+                                        id="new-password"
+                                        type="password"
+                                        placeholder="Enter new password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <DialogFooter>
+                                    <Button variant="outline" onClick={() => setIsResetDialogOpen(false)}>
+                                      Cancel
+                                    </Button>
+                                    <Button onClick={handleResetPassword}>
+                                      Reset Password
+                                    </Button>
+                                  </DialogFooter>
+                                </DialogContent>
+                              </Dialog>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-1" />
+                                    Delete
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the user
+                                      account and remove their data from our servers.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteUser(user.id, user.username)}
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
